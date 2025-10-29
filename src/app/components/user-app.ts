@@ -9,7 +9,7 @@ import { FormUserComponent } from './form-user/form-user';
   imports: [UserComponent, FormUserComponent],
   templateUrl: './user-app.html'
 })
-export class UserAppComponent implements OnInit{
+export class UserAppComponent implements OnInit {
   title: string = 'List of users';
 
   users: User[] = [];
@@ -23,12 +23,19 @@ export class UserAppComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.service.findAll().subscribe( users => this.users = users );
+    this.service.findAll().subscribe(users => this.users = users);
   }
 
   //We add to the existing users array the new user that we pass in
   addUser(user: User) {
-    this.users = [... this.users, {... user, id: new Date().getTime() }];
+    if (user.id > 0) {
+      //map() creates a new instance of an existing array, but modified.
+      this.users = this.users.map(u => (u.id == user.id) ? { ...user } : u);
+    } else {
+      this.users = [... this.users, { ...user, id: new Date().getTime() }];
+    }
+    //Wheter we create or update a User, we must clear our local instance of selectedUser
+    this.selectedUser = new User();
   }
 
   removeUser(id: number): void {
@@ -36,6 +43,6 @@ export class UserAppComponent implements OnInit{
   }
 
   setSelectedUser(userRow: User): void {
-    this.selectedUser = {... userRow};
+    this.selectedUser = { ...userRow };
   }
 }
