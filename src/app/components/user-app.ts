@@ -3,6 +3,7 @@ import { User } from '../models/user';
 import { UserService } from '../services/user';
 import { UserComponent } from './user/user';
 import { FormUserComponent } from './form-user/form-user';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'user-app',
@@ -34,6 +35,11 @@ export class UserAppComponent implements OnInit {
     } else {
       this.users = [... this.users, { ...user, id: new Date().getTime() }];
     }
+    Swal.fire({
+      title: "Saved!",
+      text: "User saved successfully!",
+      icon: "success"
+    });
     //Wheter we create or update a User, we must clear our local instance of selectedUser
     this.selectedUser = new User();
   }
