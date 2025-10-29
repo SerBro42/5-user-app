@@ -24,6 +24,6 @@ export class UserAppComponent implements OnInit{
 
   //We add to the existing users array the new user that we pass in
   addUser(user: User) {
-    this.users = [... this.users, {... user}];
+    this.users = [... this.users, {... user, id: new Date().getTime() }];
   }
 }
