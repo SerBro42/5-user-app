@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../models/user';
 import { UserService } from '../services/user';
+import { UserComponent } from './user/user';
 
 @Component({
   selector: 'user-app',
-  imports: [],
+  imports: [UserComponent],
   templateUrl: './user-app.html'
 })
 export class UserAppComponent implements OnInit{
