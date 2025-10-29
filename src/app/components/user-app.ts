@@ -18,6 +18,8 @@ export class UserAppComponent implements OnInit {
   //We need to declare this for the edit function
   selectedUser: User;
 
+  open: boolean = false;
+
   //We need to add this to the constructor for the edit function
   constructor(private service: UserService) {
     this.selectedUser = new User();
@@ -42,6 +44,7 @@ export class UserAppComponent implements OnInit {
     });
     //Wheter we create or update a User, we must clear our local instance of selectedUser
     this.selectedUser = new User();
+    this.setOpen();
   }
 
   removeUser(id: number): void {
@@ -50,5 +53,10 @@ export class UserAppComponent implements OnInit {
 
   setSelectedUser(userRow: User): void {
     this.selectedUser = { ...userRow };
+    this.open = true;
+  }
+
+  setOpen() {
+    this.open = !this.open;
   }
 }
