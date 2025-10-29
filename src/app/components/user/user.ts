@@ -13,7 +13,11 @@ export class UserComponent {
   @Input() users: User[] = [];
 
   //This event is being emitted from the child component to the parent (UserAppComponent), hence the Output.
+  //It emits only the Id of the user.
   @Output() idUserEventEmitter = new EventEmitter();
+
+  //This output, on the other hand, emits the whole user.
+  @Output() selectedUserEventEmitter = new EventEmitter();
 
   onRemoveUser(id: number): void {
 
@@ -37,4 +41,8 @@ export class UserComponent {
     });
   }
 
+  //Difference between Delete and Update functions: Delete only emits ID and Update emits the whole User.
+  onSelectedUser(user: User): void {
+    this.selectedUserEventEmitter.emit(user);
+  }
 }

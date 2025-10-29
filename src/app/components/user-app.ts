@@ -14,8 +14,12 @@ export class UserAppComponent implements OnInit{
 
   users: User[] = [];
 
-  constructor(private service: UserService) {
+  //We need to declare this for the edit function
+  selectedUser: User;
 
+  //We need to add this to the constructor for the edit function
+  constructor(private service: UserService) {
+    this.selectedUser = new User();
   }
 
   ngOnInit(): void {
@@ -29,5 +33,9 @@ export class UserAppComponent implements OnInit{
 
   removeUser(id: number): void {
     this.users = this.users.filter(user => user.id != id);
+  }
+
+  setSelectedUser(userRow: User): void {
+    this.selectedUser = {... userRow};
   }
 }
