@@ -14,8 +14,6 @@ export class FormUserComponent {
   //A generic user for the form. See constructor for more details.
   @Input() user: User;
 
-  @Output() openEventEmitter = new EventEmitter();
-
   //This info will be sent from child to parent component, hence we use @Output.
   @Output() newUserEventEmitter: EventEmitter<User> = new EventEmitter();
 
@@ -36,9 +34,5 @@ export class FormUserComponent {
     this.user = new User();
     userForm.reset();
     userForm.resetForm();
-  }
-
-  onOpenClose() {
-    this.openEventEmitter.emit();
   }
 }

@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from '../../models/user';
 import Swal from 'sweetalert2';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'user',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './user.html'
 })
 export class UserComponent {
   title: string = 'List of users';
-
 
   //This info comes from parent component (UserAppComponent), hence we use @Input
   @Input() users: User[] = [];
