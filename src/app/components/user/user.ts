@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
   templateUrl: './user.html'
 })
 export class UserComponent {
+  title: string = 'List of users';
+
 
   //This info comes from parent component (UserAppComponent), hence we use @Input
   @Input() users: User[] = [];
