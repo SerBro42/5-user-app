@@ -4,19 +4,21 @@
   <button class="btn btn-primary"
   (click)="setOpen()"> {{ open == true? 'Close form': 'Create User' }} </button>
   <div class="row">
-    @if (open) {
-      <div class="col">
-        <form-user
-        [user]="selectedUser"
-        (newUserEventEmitter)="addUser($event)"/>
-      </div>
-    } @else {
-      <div class="col">
-        <user
-        [users]="users"
-        (idUserEventEmitter)="removeUser($event)"
-        (selectedUserEventEmitter)="setSelectedUser($event)"/>
-      </div>
-    }
+
+    <div class="col">
+      <user
+      [users]="users"
+      (idUserEventEmitter)="removeUser($event)"
+      (selectedUserEventEmitter)="setSelectedUser($event)"/>
+    </div>
+
   </div>
 </div>
+
+@if (open) {
+  <div class="abrir-modal animacion fadeIn">
+    <form-user
+    [user]="selectedUser"
+    (newUserEventEmitter)="addUser($event)" (openEventEmitter)="setOpen()"/>
+  </div>
+}
