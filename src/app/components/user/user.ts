@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { User } from '../../models/user';
 import Swal from 'sweetalert2';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { UserService } from '../../services/user';
 
 @Component({
   selector: 'user',
@@ -12,14 +13,29 @@ export class UserComponent {
   title: string = 'List of users';
 
   //This info comes from parent component (UserAppComponent), hence we use @Input
-  @Input() users: User[] = [];
+  //Input is removed because we use RouterLink to access, instead of being a child component
+  users: User[] = [];
 
   //This event is being emitted from the child component to the parent (UserAppComponent), hence the Output.
   //It emits only the Id of the user.
-  @Output() idUserEventEmitter = new EventEmitter();
+  //Output removed because this no longer is a child component, but a router link
+  idUserEventEmitter = new EventEmitter();
 
   //This output, on the other hand, emits the whole user.
-  @Output() selectedUserEventEmitter = new EventEmitter();
+  //Output removed because this no longer is a child component, but a router link
+  selectedUserEventEmitter = new EventEmitter();
+
+  constructor(
+    private service: UserService,
+    private router: Router) {
+      if(this.router.getCurrentNavigation()?.extras.state) {
+        this.users = this.router.getCurrentNavigation()?.extras.state!['users'];
+      } else {
+        //This line is to avoid an error in which 'users' is undefined
+        this.service.findAll().subscribe(users => this.users = users);
+      }
+
+  }
 
   onRemoveUser(id: number): void {
 
