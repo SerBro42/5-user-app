@@ -55,6 +55,7 @@ export class UserComponent {
 
   //Difference between Delete and Update functions: Delete only emits ID and Update emits the whole User.
   onSelectedUser(user: User): void {
-    this.sharingData.selectedUserEventEmitter.emit(user);
+    //this.sharingData.selectedUserEventEmitter.emit(user);
+    this.router.navigate(['/users/edit', user.id], {state: {user}});
   }
 }
