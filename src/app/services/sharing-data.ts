@@ -10,7 +10,6 @@ export class SharingDataService {
 
   private _idUserEventEmitter = new EventEmitter();
 
-  private _selectedUserEventEmitter = new EventEmitter();
 
   get newUserEventEmitter(): EventEmitter<User> {
     return this._newUserEventEmitter;
@@ -18,10 +17,6 @@ export class SharingDataService {
 
   get idUserEventEmitter(): EventEmitter<Number> {
     return this._idUserEventEmitter;
-  }
-
-  get selectedUserEventEmitter(): EventEmitter<User> {
-    return this._selectedUserEventEmitter;
   }
 
 }

@@ -22,12 +22,12 @@ export class UserComponent {
     private service: UserService,
     private sharingData: SharingDataService,
     private router: Router) {
-      if(this.router.getCurrentNavigation()?.extras.state) {
-        this.users = this.router.getCurrentNavigation()?.extras.state!['users'];
-      } else {
-        //This line is to avoid an error in which 'users' is undefined
-        this.service.findAll().subscribe(users => this.users = users);
-      }
+    if(this.router.getCurrentNavigation()?.extras.state) {
+      this.users = this.router.getCurrentNavigation()?.extras.state!['users'];
+    } else {
+      //This line is to avoid an error in which 'users' is undefined
+      this.service.findAll().subscribe(users => this.users = users);
+    }
 
   }
 
@@ -55,7 +55,6 @@ export class UserComponent {
 
   //Difference between Delete and Update functions: Delete only emits ID and Update emits the whole User.
   onSelectedUser(user: User): void {
-    //this.sharingData.selectedUserEventEmitter.emit(user);
     this.router.navigate(['/users/edit', user.id], {state: {user}});
   }
 }

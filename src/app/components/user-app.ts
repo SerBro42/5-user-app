@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../models/user';
 import { UserService } from '../services/user';
 import Swal from 'sweetalert2';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar';
 import { SharingDataService } from '../services/sharing-data';
 
@@ -17,22 +17,22 @@ export class UserAppComponent implements OnInit {
   users: User[] = [];
 
   //We need to declare this for the edit function
-  selectedUser: User;
 
   //We need to add this to the constructor for the edit function
-  constructor(private service: UserService,
+  constructor(
+    private router: Router,
+    private service: UserService,
     private sharingData: SharingDataService) {
-    this.selectedUser = new User();
   }
 
   ngOnInit(): void {
     this.service.findAll().subscribe(users => this.users = users);
     this.addUser();
-    this.setSelectedUser();
     this.removeUser();
   }
 
   //We add to the existing users array the new user that we pass in
+  //We add the router.navigate(...) line to refresh the page once we add a user.
   addUser() {
     this.sharingData.newUserEventEmitter.subscribe( user => {
       if (user.id > 0) {
@@ -41,24 +41,23 @@ export class UserAppComponent implements OnInit {
       } else {
         this.users = [... this.users, { ...user, id: new Date().getTime() }];
       }
+      this.router.navigate(['/users'], { state: {users: this.users}});
       Swal.fire({
         title: "Saved!",
         text: "User saved successfully!",
         icon: "success"
       });
-      //Wheter we create or update a User, we must clear our local instance of selectedUser
-      this.selectedUser = new User();
     })
   }
 
+  //We add the router.navigate(...) line to refresh automatically the page after user deletion.
   removeUser(): void {
     this.sharingData.idUserEventEmitter.subscribe( id => {
       this.users = this.users.filter(user => user.id != id);
+      this.router.navigate(['/users/create'], {skipLocationChange: true}).then(() => {
+        this.router.navigate(['/users'], { state: {users: this.users}});
+      });
     })
-  }
-
-  setSelectedUser(): void {
-    this.sharingData.selectedUserEventEmitter.subscribe(userRow => this.selectedUser = { ...userRow })
   }
 
 }
