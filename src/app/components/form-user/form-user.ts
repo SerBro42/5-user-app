@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { User } from '../../models/user';
 import { CommonModule } from '@angular/common';
+import { SharingDataService } from '../../services/sharing-data';
 
 @Component({
   selector: 'form-user',
@@ -12,18 +13,16 @@ import { CommonModule } from '@angular/common';
 export class FormUserComponent {
 
   //A generic user for the form. See constructor for more details.
-  @Input() user: User;
+  user: User;
 
-  //This info will be sent from child to parent component, hence we use @Output.
-  @Output() newUserEventEmitter: EventEmitter<User> = new EventEmitter();
 
-  constructor() {
+  constructor(private sharingData: SharingDataService) {
     this.user = new User();
   }
 
   onSubmit(userForm: NgForm): void {
     if(userForm.valid) {
-      this.newUserEventEmitter.emit(this.user);
+      this.sharingData.newUserEventEmitter.emit(this.user);
       console.log(this.user);
     }
     userForm.reset();

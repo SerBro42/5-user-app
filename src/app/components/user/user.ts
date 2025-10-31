@@ -3,6 +3,7 @@ import { User } from '../../models/user';
 import Swal from 'sweetalert2';
 import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user';
+import { SharingDataService } from '../../services/sharing-data';
 
 @Component({
   selector: 'user',
@@ -16,17 +17,10 @@ export class UserComponent {
   //Input is removed because we use RouterLink to access, instead of being a child component
   users: User[] = [];
 
-  //This event is being emitted from the child component to the parent (UserAppComponent), hence the Output.
-  //It emits only the Id of the user.
-  //Output removed because this no longer is a child component, but a router link
-  idUserEventEmitter = new EventEmitter();
-
-  //This output, on the other hand, emits the whole user.
-  //Output removed because this no longer is a child component, but a router link
-  selectedUserEventEmitter = new EventEmitter();
 
   constructor(
     private service: UserService,
+    private sharingData: SharingDataService,
     private router: Router) {
       if(this.router.getCurrentNavigation()?.extras.state) {
         this.users = this.router.getCurrentNavigation()?.extras.state!['users'];
@@ -49,7 +43,7 @@ export class UserComponent {
       confirmButtonText: "Confirm"
     }).then((result) => {
       if (result.isConfirmed) {
-        this.idUserEventEmitter.emit(id);
+        this.sharingData.idUserEventEmitter.emit(id);
         Swal.fire({
           title: "Deleted!",
           text: "Article removed from the shopping cart",
@@ -61,6 +55,6 @@ export class UserComponent {
 
   //Difference between Delete and Update functions: Delete only emits ID and Update emits the whole User.
   onSelectedUser(user: User): void {
-    this.selectedUserEventEmitter.emit(user);
+    this.sharingData.selectedUserEventEmitter.emit(user);
   }
 }
