@@ -67,11 +67,15 @@ export class UserAppComponent implements OnInit {
 
   //We add the router.navigate(...) line to refresh automatically the page after user deletion.
   removeUser(): void {
-    this.sharingData.idUserEventEmitter.subscribe( id => {
-      this.users = this.users.filter(user => user.id != id);
-      this.router.navigate(['/users/create'], {skipLocationChange: true}).then(() => {
-        this.router.navigate(['/users'], { state: {users: this.users}});
-      });
+    //Coerce incoming id to a primitive number before passing to the service/remove and comparisons.
+    this.sharingData.idUserEventEmitter.subscribe(id => {
+      const idNum: number = Number(id);
+      this.service.remove(idNum).subscribe(() => {
+        this.users = this.users.filter(user => user.id != idNum);
+        this.router.navigate(['/users/create'], {skipLocationChange: true}).then(() => {
+          this.router.navigate(['/users']);
+        });
+      })
     })
   }
 
