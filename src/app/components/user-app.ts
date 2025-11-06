@@ -46,12 +46,17 @@ export class UserAppComponent implements OnInit {
   addUser() {
     this.sharingData.newUserEventEmitter.subscribe( user => {
       if (user.id > 0) {
-        //map() creates a new instance of an existing array, but modified.
-        this.users = this.users.map(u => (u.id == user.id) ? { ...user } : u);
+        this.service.update(user).subscribe(userUpdated => {
+          //map() creates a new instance of an existing array, but modified.
+          this.users = this.users.map(u => (u.id == userUpdated.id) ? { ...userUpdated } : u);
+        })
       } else {
-        this.users = [... this.users, { ...user, id: new Date().getTime() }];
+        this.service.create(user).subscribe( userNew => {
+          console.log(userNew);
+          this.users = [... this.users, { ...userNew }];
+        })
       }
-      this.router.navigate(['/users'], { state: {users: this.users}});
+      this.router.navigate(['/users']);
       Swal.fire({
         title: "Saved!",
         text: "User saved successfully!",

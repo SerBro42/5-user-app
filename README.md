@@ -57,3 +57,7 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Spring Boot Hibernate
+
+There was an important change made in the class user.ts, changing from 'id: number = 0;' to 'id!: number;'. The reason being, when sending a POST request, Spring Boot Hibernate doesn't interpet id=0 as null value, but as literally id=0. Consequently, the POST request is interpreted as a PUT request on a registry with id=0, which doesn't exist in the database, and a code 500 is returned from the server side.
