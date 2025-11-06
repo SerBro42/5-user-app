@@ -8,5 +8,5 @@ import { User } from '../../models/user';
   templateUrl: './navbar.html'
 })
 export class NavbarComponent {
-
+  @Input() users: User[] = [];
 }

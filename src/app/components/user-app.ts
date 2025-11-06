@@ -49,14 +49,15 @@ export class UserAppComponent implements OnInit {
         this.service.update(user).subscribe(userUpdated => {
           //map() creates a new instance of an existing array, but modified.
           this.users = this.users.map(u => (u.id == userUpdated.id) ? { ...userUpdated } : u);
+          this.router.navigate(['/users'], {state: {users: this.users}});
         })
       } else {
         this.service.create(user).subscribe( userNew => {
           console.log(userNew);
           this.users = [... this.users, { ...userNew }];
+          this.router.navigate(['/users'], {state: {users: this.users}});
         })
       }
-      this.router.navigate(['/users']);
       Swal.fire({
         title: "Saved!",
         text: "User saved successfully!",
@@ -67,13 +68,13 @@ export class UserAppComponent implements OnInit {
 
   //We add the router.navigate(...) line to refresh automatically the page after user deletion.
   removeUser(): void {
-    //Coerce incoming id to a primitive number before passing to the service/remove and comparisons.
     this.sharingData.idUserEventEmitter.subscribe(id => {
+      //Coerce incoming id to a primitive number before passing to the service/remove and comparisons.
       const idNum: number = Number(id);
       this.service.remove(idNum).subscribe(() => {
         this.users = this.users.filter(user => user.id != idNum);
         this.router.navigate(['/users/create'], {skipLocationChange: true}).then(() => {
-          this.router.navigate(['/users']);
+          this.router.navigate(['/users'], {state: {users: this.users}});
         });
       })
     })

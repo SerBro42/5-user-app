@@ -4,7 +4,7 @@ import { UserAppComponent } from "./components/user-app";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, UserAppComponent],
+  imports: [UserAppComponent],
   templateUrl: './app.html'
 })
 export class App {
