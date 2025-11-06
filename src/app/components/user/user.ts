@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { User } from '../../models/user';
 import Swal from 'sweetalert2';
 import { Router, RouterModule } from '@angular/router';
@@ -10,7 +10,7 @@ import { SharingDataService } from '../../services/sharing-data';
   imports: [RouterModule],
   templateUrl: './user.html'
 })
-export class UserComponent {
+export class UserComponent implements OnInit{
   title: string = 'List of users';
 
   //This info comes from parent component (UserAppComponent), hence we use @Input
@@ -21,14 +21,11 @@ export class UserComponent {
   constructor(
     private service: UserService,
     private sharingData: SharingDataService,
-    private router: Router) {
-    if(this.router.getCurrentNavigation()?.extras.state) {
-      this.users = this.router.getCurrentNavigation()?.extras.state!['users'];
-    } else {
+    private router: Router) {  }
+
+  ngOnInit(): void {
       //This line is to avoid an error in which 'users' is undefined
       this.service.findAll().subscribe(users => this.users = users);
-    }
-
   }
 
   onRemoveUser(id: number): void {
@@ -55,6 +52,6 @@ export class UserComponent {
 
   //Difference between Delete and Update functions: Delete only emits ID and Update emits the whole User.
   onSelectedUser(user: User): void {
-    this.router.navigate(['/users/edit', user.id], {state: {user}});
+    this.router.navigate(['/users/edit', user.id]);
   }
 }
