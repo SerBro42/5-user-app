@@ -4,6 +4,7 @@ import { User } from '../../models/user';
 import { CommonModule } from '@angular/common';
 import { SharingDataService } from '../../services/sharing-data';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from '../../services/user';
 
 @Component({
   selector: 'form-user',
@@ -18,10 +19,13 @@ export class FormUserComponent implements OnInit{
 
   constructor(
     private route: ActivatedRoute,
-    private sharingData: SharingDataService) {
+    private sharingData: SharingDataService,
+    private service: UserService) {
     this.user = new User();
   }
 
+  //There are two alternatives for obtaining the user info by ID: the first (the one that we originally implemented) involves
+  //calling the Angular State. The second involves calling the back-end. We have opted to stay on our original paradigm for now.
   ngOnInit(): void {
 
     this.sharingData.selectUserEventEmitter.subscribe(user => this.user = user);
@@ -34,6 +38,8 @@ export class FormUserComponent implements OnInit{
 
       if(id > 0) {
         this.sharingData.findUserByIdEventEmitter.emit(id);
+        //Given that we receive an observable, we have to subscribe to it
+        //this.service.findById(id).subscribe(user => this.user = user);
       }
     });
   }
