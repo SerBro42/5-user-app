@@ -35,7 +35,7 @@ export class UserAppComponent implements OnInit {
   findUserById() {
     this.sharingData.findUserByIdEventEmitter.subscribe(id => {
 
-      const user = this.users.find( user => user.id == id);
+      const user = this.users.find(user => user.id == id);
 
       this.sharingData.selectUserEventEmitter.emit(user);
     })
@@ -44,18 +44,30 @@ export class UserAppComponent implements OnInit {
   //We add to the existing users array the new user that we pass in
   //We add the router.navigate(...) line to refresh the page once we add a user.
   addUser() {
-    this.sharingData.newUserEventEmitter.subscribe( user => {
+    this.sharingData.newUserEventEmitter.subscribe(user => {
       if (user.id > 0) {
-        this.service.update(user).subscribe(userUpdated => {
-          //map() creates a new instance of an existing array, but modified.
-          this.users = this.users.map(u => (u.id == userUpdated.id) ? { ...userUpdated } : u);
-          this.router.navigate(['/users'], {state: {users: this.users}});
-        })
+        this.service.update(user).subscribe(
+          {
+            next: (userUpdated) => {
+              //map() creates a new instance of an existing array, but modified.
+              this.users = this.users.map(u => (u.id == userUpdated.id) ? { ...userUpdated } : u);
+              this.router.navigate(['/users'], { state: { users: this.users } });
+            },
+            error: (err) => {
+              console.log(err.error)
+            }
+          }
+        )
       } else {
-        this.service.create(user).subscribe( userNew => {
-          console.log(userNew);
-          this.users = [... this.users, { ...userNew }];
-          this.router.navigate(['/users'], {state: {users: this.users}});
+        this.service.create(user).subscribe({
+          next: userNew => {
+            console.log(userNew);
+            this.users = [... this.users, { ...userNew }];
+            this.router.navigate(['/users'], { state: { users: this.users } });
+          },
+          error: (err) => {
+            console.log(err.error)
+          }
         })
       }
       Swal.fire({
@@ -73,8 +85,8 @@ export class UserAppComponent implements OnInit {
       const idNum: number = Number(id);
       this.service.remove(idNum).subscribe(() => {
         this.users = this.users.filter(user => user.id != idNum);
-        this.router.navigate(['/users/create'], {skipLocationChange: true}).then(() => {
-          this.router.navigate(['/users'], {state: {users: this.users}});
+        this.router.navigate(['/users/create'], { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/users'], { state: { users: this.users } });
         });
       })
     })
