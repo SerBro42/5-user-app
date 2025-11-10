@@ -4,10 +4,11 @@ import Swal from 'sweetalert2';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user';
 import { SharingDataService } from '../../services/sharing-data';
+import { PaginatorComponent } from '../paginator/paginator';
 
 @Component({
   selector: 'user',
-  imports: [RouterModule],
+  imports: [RouterModule, PaginatorComponent],
   templateUrl: './user.html'
 })
 export class UserComponent implements OnInit{
@@ -17,6 +18,7 @@ export class UserComponent implements OnInit{
   //Input is removed because we use RouterLink to access, instead of being a child component
   users: User[] = [];
 
+  paginator: any = [];
 
   constructor(
     private service: UserService,
@@ -37,7 +39,8 @@ export class UserComponent implements OnInit{
         console.log(page);
         this.service.findAllPageable(page).subscribe(pageable => {
           this.users = pageable.content as User[];
-          this.sharingData.pageUsersEventEmitter.emit(this.users);
+          this.paginator = pageable;
+          this.sharingData.pageUsersEventEmitter.emit({users: this.users, paginator: this.paginator});
         });
       })
     }
