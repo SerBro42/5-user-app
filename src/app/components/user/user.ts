@@ -50,7 +50,7 @@ export class UserComponent implements OnInit{
         this.sharingData.idUserEventEmitter.emit(id);
         Swal.fire({
           title: "Deleted!",
-          text: "Article removed from the shopping cart",
+          text: "User deleted from database",
           icon: "success"
         });
       }

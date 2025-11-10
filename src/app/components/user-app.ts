@@ -52,9 +52,20 @@ export class UserAppComponent implements OnInit {
               //map() creates a new instance of an existing array, but modified.
               this.users = this.users.map(u => (u.id == userUpdated.id) ? { ...userUpdated } : u);
               this.router.navigate(['/users'], { state: { users: this.users } });
+
+              Swal.fire({
+                title: "User updated!",
+                text: "User edited successfully!",
+                icon: "success"
+              });
             },
             error: (err) => {
-              console.log(err.error)
+              //console.log(err.error)
+              //both here and in the 'else' clause, we know that the errors are displayed correctly. Next step is to emit them
+              //where they are actually needed, which is form-user component.
+              if (err.status == 400) {
+                this.sharingData.errorsFormUserEventEmitter.emit(err.error);
+              }
             }
           }
         )
@@ -64,17 +75,23 @@ export class UserAppComponent implements OnInit {
             console.log(userNew);
             this.users = [... this.users, { ...userNew }];
             this.router.navigate(['/users'], { state: { users: this.users } });
+
+            Swal.fire({
+              title: "New user created!",
+              text: "User saved successfully!",
+              icon: "success"
+            });
           },
           error: (err) => {
-            console.log(err.error)
+            //console.log(err.error)
+            //console.log(err.status);
+            if (err.status == 400) {
+              this.sharingData.errorsFormUserEventEmitter.emit(err.error);
+            }
           }
         })
       }
-      Swal.fire({
-        title: "Saved!",
-        text: "User saved successfully!",
-        icon: "success"
-      });
+
     })
   }
 

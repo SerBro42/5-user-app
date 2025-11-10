@@ -14,6 +14,9 @@ export class SharingDataService {
 
   private _selectUserEventEmitter = new EventEmitter();
 
+  //We need this one in order to emit error data from user-app to form-user
+  private _errorsFormUserEventEmitter = new EventEmitter();
+
   get selectUserEventEmitter() {
     return this._selectUserEventEmitter;
   }
@@ -28,6 +31,10 @@ export class SharingDataService {
 
   get idUserEventEmitter(): EventEmitter<Number> {
     return this._idUserEventEmitter;
+  }
+
+  get errorsFormUserEventEmitter() {
+    return this._errorsFormUserEventEmitter;
   }
 
 }

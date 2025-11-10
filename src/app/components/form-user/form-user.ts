@@ -16,6 +16,7 @@ export class FormUserComponent implements OnInit{
 
   //A generic user for the form. See constructor for more details.
   user: User;
+  errors: any = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -27,6 +28,9 @@ export class FormUserComponent implements OnInit{
   //There are two alternatives for obtaining the user info by ID: the first (the one that we originally implemented) involves
   //calling the Angular State. The second involves calling the back-end. We have opted to stay on our original paradigm for now.
   ngOnInit(): void {
+
+    //We subscribe to the recently created error emitter to receive the error messages sent from user-app.
+    this.sharingData.errorsFormUserEventEmitter.subscribe(errors => this.errors = errors);
 
     this.sharingData.selectUserEventEmitter.subscribe(user => this.user = user);
 
@@ -45,12 +49,12 @@ export class FormUserComponent implements OnInit{
   }
 
   onSubmit(userForm: NgForm): void {
-    if(userForm.valid) {
+    //if(userForm.valid) {
       this.sharingData.newUserEventEmitter.emit(this.user);
       console.log(this.user);
-    }
-    userForm.reset();
-    userForm.resetForm();
+    //}
+    //userForm.reset();
+    //userForm.resetForm();
   }
 
   onClear(userForm: NgForm): void {
