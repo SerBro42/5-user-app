@@ -65,7 +65,12 @@ export class UserAppComponent implements OnInit {
             next: (userUpdated) => {
               //map() creates a new instance of an existing array, but modified.
               this.users = this.users.map(u => (u.id == userUpdated.id) ? { ...userUpdated } : u);
-              this.router.navigate(['/users'], { state: { users: this.users } });
+              this.router.navigate(['/users'], {
+                state: {
+                  users: this.users,
+                  paginator: this.paginator
+                }
+              });
 
               Swal.fire({
                 title: "User updated!",
@@ -88,7 +93,12 @@ export class UserAppComponent implements OnInit {
           next: userNew => {
             console.log(userNew);
             this.users = [... this.users, { ...userNew }];
-            this.router.navigate(['/users'], { state: { users: this.users } });
+            this.router.navigate(['/users'], {
+              state: {
+                users: this.users,
+                paginator: this.paginator
+              }
+            });
 
             Swal.fire({
               title: "New user created!",
@@ -117,7 +127,12 @@ export class UserAppComponent implements OnInit {
       this.service.remove(idNum).subscribe(() => {
         this.users = this.users.filter(user => user.id != idNum);
         this.router.navigate(['/users/create'], { skipLocationChange: true }).then(() => {
-          this.router.navigate(['/users'], { state: { users: this.users } });
+          this.router.navigate(['/users'], {
+            state: {
+              users: this.users,
+              paginator: this.paginator
+            }
+          });
         });
       })
     })
