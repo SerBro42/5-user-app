@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { UserComponent } from './components/user/user';
 import { FormUserComponent } from './components/form-user/form-user';
+import { AuthComponent } from './components/auth/auth';
 
 export const routes: Routes = [
   {
@@ -23,5 +24,9 @@ export const routes: Routes = [
   {
     path: 'users/edit/:id',
     component: FormUserComponent
+  },
+  {
+    path: 'login',
+    component: AuthComponent
   }
 ];

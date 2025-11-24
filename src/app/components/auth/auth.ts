@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
   imports: [FormsModule],
   templateUrl: './auth.html'
 })
-export class Auth {
+export class AuthComponent {
 
   user: User;
 
