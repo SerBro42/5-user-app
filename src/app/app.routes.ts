@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { UserComponent } from './components/user/user';
 import { FormUserComponent } from './components/form-user/form-user';
 import { AuthComponent } from './components/auth/auth';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   {
@@ -19,11 +20,13 @@ export const routes: Routes = [
   },
   {
     path: 'users/create',
-    component: FormUserComponent
+    component: FormUserComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'users/edit/:id',
-    component: FormUserComponent
+    component: FormUserComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'login',
