@@ -20,6 +20,13 @@ export class SharingDataService {
   //We need this one to properly update the users on the screen whenever we change page.
   private _pageUsersEventEmitter = new EventEmitter();
 
+  //We need this to emit the username and password from our login/sign in page
+  private _handlerLoginEventEmitter = new EventEmitter();
+
+  get handlerLoginEventEmitter() {
+    return this._handlerLoginEventEmitter;
+  }
+
   get selectUserEventEmitter() {
     return this._selectUserEventEmitter;
   }
