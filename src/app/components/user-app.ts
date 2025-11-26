@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar';
 import { SharingDataService } from '../services/sharing-data';
+import { AuthService } from '../services/auth';
 
 @Component({
   selector: 'user-app',
@@ -23,6 +24,7 @@ export class UserAppComponent implements OnInit {
     private router: Router,
     private service: UserService,
     private sharingData: SharingDataService,
+    private authService: AuthService,
     private route: ActivatedRoute) {
   }
 
@@ -43,6 +45,24 @@ export class UserAppComponent implements OnInit {
   handlerLogin() {
     this.sharingData.handlerLoginEventEmitter.subscribe(({username, password}) => {
       console.log(username+ ' '+password);
+
+      this.authService.loginUser({username, password}).subscribe({
+        next: response => {
+          const token = response.token;
+          console.log(token);
+          //atob is a Javascript function that decrypts from base64 to a JSON object
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          console.log(payload);
+        },
+        error: error => {
+          if (error.status == 401) {
+            console.log(error.error);
+            Swal.fire('Login error', 'Incorrect username and/or password', 'error')
+          } else {
+            throw error;
+          }
+        }
+      })
     })
   }
 
