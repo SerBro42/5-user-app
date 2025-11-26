@@ -50,14 +50,14 @@ export class UserAppComponent implements OnInit {
         next: response => {
           const token = response.token;
           console.log(token);
-          //atob is a Javascript function that decrypts from base64 to a JSON object
+          //atob is a JavaScript function that decrypts from base64 to a JSON string
+          //JSON.parse converts a JSON string into a JavaScript object
           const payload = JSON.parse(atob(token.split(".")[1]));
           console.log(payload);
         },
         error: error => {
           if (error.status == 401) {
-            console.log(error.error);
-            Swal.fire('Login error', 'Incorrect username and/or password', 'error')
+            Swal.fire('Login error', error.error.message , 'error')
           } else {
             throw error;
           }
