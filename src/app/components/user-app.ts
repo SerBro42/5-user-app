@@ -52,7 +52,8 @@ export class UserAppComponent implements OnInit {
           console.log(token);
           //atob is a JavaScript function that decrypts from base64 to a JSON string
           //JSON.parse converts a JSON string into a JavaScript object
-          const payload = JSON.parse(atob(token.split(".")[1]));
+          //The original line, featuring atob and JSON.parse, was transferred to AuthService. This was done to make the code mor reusable and more modular.
+          const payload = this.authService.getPayLoad(token);
 
           //Having parsed the payload, we extract relevant data from it and save them in sessionStorage. You might want to declare isAuth
           //as 'true' instead of payload.isAuth
