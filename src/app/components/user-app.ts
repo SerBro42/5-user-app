@@ -53,7 +53,21 @@ export class UserAppComponent implements OnInit {
           //atob is a JavaScript function that decrypts from base64 to a JSON string
           //JSON.parse converts a JSON string into a JavaScript object
           const payload = JSON.parse(atob(token.split(".")[1]));
-          console.log(payload);
+
+          //Having parsed the payload, we extract relevant data from it and save them in sessionStorage. You might want to declare isAuth
+          //as 'true' instead of payload.isAuth
+          const user = { username: payload.sub };
+          const login = {
+            user,
+            isAuth: payload.isAuth,
+            isAdmin: payload.isAdmin
+          };
+          //sessionStorage only stores String-type data, and 'login' is an object. We must transform it into String first. We do it by means 
+          //of JSON.stringify().
+          //We decided to move the line that saves 'login' from here to AuthService
+          this.authService.token = token;
+          this.authService.user = login;
+          this.router.navigate(['/users/page/0']);
         },
         error: error => {
           if (error.status == 401) {
