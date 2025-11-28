@@ -64,4 +64,13 @@ export class AuthService {
     }
     return null;
   }
+
+  isAdmin() {
+    //Here, we're calling the get method, not the attribute. Hence, the absence of ':'
+    return this.user.isAdmin;
+  }
+
+  isAuthenticated() {
+    return this.user.isAuth;
+  }
 }
