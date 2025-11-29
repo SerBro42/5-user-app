@@ -14,7 +14,7 @@
               <div class="text-danger">{{ errors.name }}</div>
             }
 
-<!--             @if (name.invalid && (name.dirty || name.touched)) {
+            <!-- @if (name.invalid && (name.dirty || name.touched)) {
             @if (name.errors!['required']) {
             <div class="text-danger">
               Name required
@@ -28,7 +28,7 @@
             @if (errors?.lastName){
               <div class="text-danger">{{ errors.lastName }}</div>
             }
-<!--             @if (lastName.invalid && (lastName.dirty || lastName.touched)) {
+            <!-- @if (lastName.invalid && (lastName.dirty || lastName.touched)) {
             @if (lastName.errors!['required']) {
             <div class="text-danger">
               Last name required
@@ -76,26 +76,28 @@
             }
             } -->
           </div>
-          <div>
-            <input placeholder="Password" name="password" type="password" [(ngModel)]="user.password"
-              class="form-control my-2" #password="ngModel"> <!-- required minlength="4" -->
-            @if (errors?.password){
-              <div class="text-danger">{{ errors.password }}</div>
-            }
-
-            <!-- @if (password.invalid && (password.dirty || password.touched)) {
-            @if (password.errors!['required']) {
-            <div class="text-danger">
-              Password required
+          @if(user.id == 0) {
+            <div>
+              <input placeholder="Password" name="password" type="password" [(ngModel)]="user.password"
+                class="form-control my-2" #password="ngModel"> <!-- required minlength="4" -->
+              @if (errors?.password){
+                <div class="text-danger">{{ errors.password }}</div>
+              }
+  
+              <!-- @if (password.invalid && (password.dirty || password.touched)) {
+              @if (password.errors!['required']) {
+              <div class="text-danger">
+                Password required
+              </div>
+              }
+              @if (password.errors!['minlength']) {
+              <div class="text-danger">
+                The password must have at least 4 characters.
+              </div>
+              }
+              } -->
             </div>
-            }
-            @if (password.errors!['minlength']) {
-            <div class="text-danger">
-              The password must have at least 4 characters.
-            </div>
-            }
-            } -->
-          </div>
+          }
           <div>
             <button type="submit" class="btn btn-primary m-2"> <!-- [disabled]="userForm.invalid" -->
               {{(user.id > 0)? 'Update': 'Create'}}
