@@ -67,3 +67,14 @@ For more information on using the Angular CLI, including detailed command refere
 ## Spring Boot Hibernate
 
 There was an important change made in the class user.ts, changing from 'id: number = 0;' to 'id!: number;'. The reason being, when sending a POST request, Spring Boot Hibernate doesn't interpet id=0 as null value, but as literally id=0. Consequently, the POST request is interpreted as a PUT request on a registry with id=0, which doesn't exist in the database, and a code 500 is returned from the server side.
+
+### Important note regarding POST requests
+
+With the previous version of UserService, every time a POST request was sent from the front end to the back end, a 403 forbidden error was returned. The reason is because Hibernate treats a payload with id=0 as a update request, rather than create. Thus, excluding the id attribute from POST requests is necessary in order for them to work properly. Code snippet shown below:
+
+````
+    if (user.id === 0) {
+      const { id, ...userWithoutId } = user;
+      return this.http.post<User>(this.url, userWithoutId);
+    }
+````

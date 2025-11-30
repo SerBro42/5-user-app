@@ -28,6 +28,12 @@ export class UserService {
   }
 
   create(user: User): Observable<User> {
+    // Exclude id field when creating a new user (id === 0) to prevent Hibernate from treating it as an update
+    // Hibernate interprets id=0 as an attempt to update an existing entity, causing StaleObjectStateException
+    if (user.id === 0) {
+      const { id, ...userWithoutId } = user;
+      return this.http.post<User>(this.url, userWithoutId);
+    }
     return this.http.post<User>(this.url, user);
   }
 
