@@ -6,6 +6,8 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar';
 import { SharingDataService } from '../services/sharing-data';
 import { AuthService } from '../services/auth';
+import { Store } from '@ngrx/store';
+import { add, find, findAll, remove, setPaginator, update } from '../store/users.actions';
 
 @Component({
   selector: 'user-app',
@@ -17,16 +19,21 @@ export class UserAppComponent implements OnInit {
 
   users: User[] = [];
   paginator: any = {};
-
+  user!: User;
 
   //We need to add this to the constructor for the edit function
   constructor(
-    
+    private store: Store<{users: any}>,
     private router: Router,
     private service: UserService,
     private sharingData: SharingDataService,
     private authService: AuthService,
     private route: ActivatedRoute) {
+      this.store.select('users').subscribe(state => {
+        this.users = state.users;
+        this.paginator = state.paginator;
+        this.user = state.user;
+      })
   }
 
   ngOnInit(): void {
@@ -86,17 +93,19 @@ export class UserAppComponent implements OnInit {
 
   pageUsersEvent() {
     this.sharingData.pageUsersEventEmitter.subscribe(pageable => {
-      this.users = pageable.users;
-      this.paginator = pageable.paginator;
+/*       this.users = pageable.users;
+      this.paginator = pageable.paginator; */
+      this.store.dispatch(findAll({ users: pageable.users }))
+      this.store.dispatch(setPaginator({ paginator: pageable.paginator }))
     });
   }
 
   findUserById() {
     this.sharingData.findUserByIdEventEmitter.subscribe(id => {
 
-      const user = this.users.find(user => user.id == id);
-
-      this.sharingData.selectUserEventEmitter.emit(user);
+      /* const user = this.users.find(user => user.id == id); */
+      this.store.dispatch(find({ id }));
+      this.sharingData.selectUserEventEmitter.emit(this.user);
     })
   }
 
@@ -109,7 +118,11 @@ export class UserAppComponent implements OnInit {
           {
             next: (userUpdated) => {
               //map() creates a new instance of an existing array, but modified.
-              this.users = this.users.map(u => (u.id == userUpdated.id) ? { ...userUpdated } : u);
+              //this.users = this.users.map(u => (u.id == userUpdated.id) ? { ...userUpdated } : u);
+              
+              //From now on, instead of managing the state as an attribute of a component, the state is now
+              //managed by means of Redux.
+              this.store.dispatch(update({ userUpdated }));
               this.router.navigate(['/users'], {
                 state: {
                   users: this.users,
@@ -137,7 +150,9 @@ export class UserAppComponent implements OnInit {
         this.service.create(user).subscribe({
           next: userNew => {
             console.log(userNew);
-            this.users = [... this.users, { ...userNew }];
+            //this.users = [... this.users, { ...userNew }];
+            this.store.dispatch(add({ userNew }));
+
             this.router.navigate(['/users'], {
               state: {
                 users: this.users,
@@ -170,7 +185,8 @@ export class UserAppComponent implements OnInit {
       //Coerce incoming id to a primitive number before passing to the service/remove and comparisons.
       const idNum: number = Number(id);
       this.service.remove(idNum).subscribe(() => {
-        this.users = this.users.filter(user => user.id != idNum);
+        // this.users = this.users.filter(user => user.id != idNum);
+        this.store.dispatch(remove({ id }));
         this.router.navigate(['/users/create'], { skipLocationChange: true }).then(() => {
           this.router.navigate(['/users'], {
             state: {
