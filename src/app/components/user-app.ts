@@ -32,7 +32,9 @@ export class UserAppComponent implements OnInit {
       this.store.select('users').subscribe(state => {
         this.users = state.users;
         this.paginator = state.paginator;
-        this.user = state.user;
+        //In redux, the data in the Store are immutable, and therefore cannot be changed. Instead of attempting to change them
+        //we have to clone them.
+        this.user = {... state.user};
       })
   }
 
