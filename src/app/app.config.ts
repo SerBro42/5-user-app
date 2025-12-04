@@ -6,6 +6,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenInterceptor } from './interceptors/token-interceptor';
 import { provideStore } from '@ngrx/store';
 import { usersReducer } from './store/users.reducer';
+import { provideEffects } from '@ngrx/effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,7 +15,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([tokenInterceptor])),
     provideStore({
-      users: usersReducer
-    })
+        users: usersReducer
+    }),
+    provideEffects()
 ]
 };
