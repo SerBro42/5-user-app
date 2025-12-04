@@ -17,8 +17,6 @@ import { add, find, findAll, remove, setPaginator, update } from '../store/users
 })
 export class UserAppComponent implements OnInit {
 
-  users: User[] = [];
-  paginator: any = {};
   user!: User;
 
   //We need to add this to the constructor for the edit function
@@ -30,8 +28,6 @@ export class UserAppComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute) {
       this.store.select('users').subscribe(state => {
-        this.users = state.users;
-        this.paginator = state.paginator;
         //In redux, the data in the Store are immutable, and therefore cannot be changed. Instead of attempting to change them
         //we have to clone them.
         this.user = {... state.user};
@@ -125,12 +121,7 @@ export class UserAppComponent implements OnInit {
               //From now on, instead of managing the state as an attribute of a component, the state is now
               //managed by means of Redux.
               this.store.dispatch(update({ userUpdated }));
-              this.router.navigate(['/users'], {
-                state: {
-                  users: this.users,
-                  paginator: this.paginator
-                }
-              });
+              this.router.navigate(['/users']);
 
               Swal.fire({
                 title: "User updated!",
@@ -152,15 +143,9 @@ export class UserAppComponent implements OnInit {
         this.service.create(user).subscribe({
           next: userNew => {
             console.log(userNew);
-            //this.users = [... this.users, { ...userNew }];
             this.store.dispatch(add({ userNew }));
 
-            this.router.navigate(['/users'], {
-              state: {
-                users: this.users,
-                paginator: this.paginator
-              }
-            });
+            this.router.navigate(['/users']);
 
             Swal.fire({
               title: "New user created!",
@@ -187,15 +172,9 @@ export class UserAppComponent implements OnInit {
       //Coerce incoming id to a primitive number before passing to the service/remove and comparisons.
       const idNum: number = Number(id);
       this.service.remove(idNum).subscribe(() => {
-        // this.users = this.users.filter(user => user.id != idNum);
         this.store.dispatch(remove({ id }));
         this.router.navigate(['/users/create'], { skipLocationChange: true }).then(() => {
-          this.router.navigate(['/users'], {
-            state: {
-              users: this.users,
-              paginator: this.paginator
-            }
-          });
+          this.router.navigate(['/users']);
         });
       })
     })
