@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/user';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -39,15 +39,7 @@ export class UserComponent implements OnInit{
     }
 
   ngOnInit(): void {
-    if(this.users == undefined || this.users == null || this.users.length == 0) {
-      console.log('running findAll');
-      //this.service.findAll().subscribe(users => this.users = users);
-      this.route.paramMap.subscribe(params => {
-        const page = +(params.get('page') || '0');
-        console.log(page);
-        this.store.dispatch(load({ page }));
-      })
-    }
+    this.route.paramMap.subscribe(params => this.store.dispatch(load({ page: +(params.get('page') || '0') })))
   }
 
   onRemoveUser(id: number): void {

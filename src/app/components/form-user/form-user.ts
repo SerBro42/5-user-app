@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { SharingDataService } from '../../services/sharing-data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user';
+import { Store } from '@ngrx/store';
+import { add } from '../../store/users.actions';
 
 @Component({
   selector: 'form-user',
@@ -18,11 +20,17 @@ export class FormUserComponent implements OnInit{
   user: User;
   errors: any = {};
 
+  //We are gradually replacing all Service calles with Store
   constructor(
+    private store: Store<{ users: any }>,
     private route: ActivatedRoute,
     private sharingData: SharingDataService,
     private service: UserService) {
     this.user = new User();
+    this.store.select('users').subscribe(state => {
+      this.errors = state.errors;
+      this.user = { ...state.user };
+    })
   }
 
   //There are two alternatives for obtaining the user info by ID: the first (the one that we originally implemented) involves
@@ -49,9 +57,10 @@ export class FormUserComponent implements OnInit{
   }
 
   onSubmit(userForm: NgForm): void {
+    this.store.dispatch(add({ userNew: this.user }))
     //if(userForm.valid) {
-      this.sharingData.newUserEventEmitter.emit(this.user);
-      console.log(this.user);
+      /* this.sharingData.newUserEventEmitter.emit(this.user);
+      console.log(this.user); */
     //}
     //userForm.reset();
     //userForm.resetForm();
