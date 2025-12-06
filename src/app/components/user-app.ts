@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../models/user';
 import { UserService } from '../services/user';
 import Swal from 'sweetalert2';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar';
 import { SharingDataService } from '../services/sharing-data';
 import { AuthService } from '../services/auth';
 import { Store } from '@ngrx/store';
-import { add, find, findAll, remove, setPaginator, update } from '../store/users.actions';
+import { remove } from '../store/users.actions';
 
 @Component({
   selector: 'user-app',
@@ -17,34 +16,17 @@ import { add, find, findAll, remove, setPaginator, update } from '../store/users
 })
 export class UserAppComponent implements OnInit {
 
-  user!: User;
-
   //We need to add this to the constructor for the edit function
   constructor(
     private store: Store<{users: any}>,
     private router: Router,
     private service: UserService,
     private sharingData: SharingDataService,
-    private authService: AuthService,
-    private route: ActivatedRoute) {
-      this.store.select('users').subscribe(state => {
-        //In redux, the data in the Store are immutable, and therefore cannot be changed. Instead of attempting to change them
-        //we have to clone them.
-        this.user = {... state.user};
-      })
+    private authService: AuthService) {
   }
 
   ngOnInit(): void {
-    //this.service.findAll().subscribe(users => this.users = users);
-    // this.route.paramMap.subscribe(params => {
-    //   const page = +(params.get('page') || '0');
-    //   console.log(page);
-    //   //this.service.findAllPageable(page).subscribe(pageable => this.users = pageable.content as User[]);
-    // })
-    this.addUser();
     this.removeUser();
-    this.findUserById();
-    this.pageUsersEvent();
     this.handlerLogin();
   }
 
@@ -89,82 +71,11 @@ export class UserAppComponent implements OnInit {
     })
   }
 
-  pageUsersEvent() {
-    this.sharingData.pageUsersEventEmitter.subscribe(pageable => {
-/*       this.users = pageable.users;
-      this.paginator = pageable.paginator; */
-      this.store.dispatch(findAll({ users: pageable.users }))
-      this.store.dispatch(setPaginator({ paginator: pageable.paginator }))
-    });
-  }
+  //We delete pageUsersEvent() completely
 
-  findUserById() {
-    this.sharingData.findUserByIdEventEmitter.subscribe(id => {
+  //We delete findUserById() completely
 
-      /* const user = this.users.find(user => user.id == id); */
-      this.store.dispatch(find({ id }));
-      this.sharingData.selectUserEventEmitter.emit(this.user);
-    })
-  }
-
-  //We add to the existing users array the new user that we pass in
-  //We add the router.navigate(...) line to refresh the page once we add a user.
-  addUser() {
-    this.sharingData.newUserEventEmitter.subscribe(user => {
-      if (user.id > 0) {
-        this.service.update(user).subscribe(
-          {
-            next: (userUpdated) => {
-              //map() creates a new instance of an existing array, but modified.
-              //this.users = this.users.map(u => (u.id == userUpdated.id) ? { ...userUpdated } : u);
-              
-              //From now on, instead of managing the state as an attribute of a component, the state is now
-              //managed by means of Redux.
-              this.store.dispatch(update({ userUpdated }));
-              this.router.navigate(['/users']);
-
-              Swal.fire({
-                title: "User updated!",
-                text: "User edited successfully!",
-                icon: "success"
-              });
-            },
-            error: (err) => {
-              //console.log(err.error)
-              //both here and in the 'else' clause, we know that the errors are displayed correctly. Next step is to emit them
-              //where they are actually needed, which is form-user component.
-              if (err.status == 400) {
-                this.sharingData.errorsFormUserEventEmitter.emit(err.error);
-              }
-            }
-          }
-        )
-      } else {
-        this.service.create(user).subscribe({
-          next: userNew => {
-            console.log(userNew);
-            this.store.dispatch(add({ userNew }));
-
-            this.router.navigate(['/users']);
-
-            Swal.fire({
-              title: "New user created!",
-              text: "User saved successfully!",
-              icon: "success"
-            });
-          },
-          error: (err) => {
-            //console.log(err.error)
-            //console.log(err.status);
-            if (err.status == 400) {
-              this.sharingData.errorsFormUserEventEmitter.emit(err.error);
-            }
-          }
-        })
-      }
-
-    })
-  }
+  //We delete addUser() completely
 
   //We add the router.navigate(...) line to refresh automatically the page after user deletion.
   removeUser(): void {

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { UserService } from "../services/user";
 import { catchError, EMPTY, exhaustMap, map, of, tap } from "rxjs";
-import { add, addSuccess, findAll, findAllPageable, load, setErrors, setPaginator } from "./users.actions";
+import { add, addSuccess, findAll, findAllPageable, load, setErrors, setPaginator, update, updateSuccess } from "./users.actions";
 import { User } from "../models/user";
 import Swal from "sweetalert2";
 import { Router } from "@angular/router";
@@ -13,7 +13,9 @@ import { Router } from "@angular/router";
 export class UsersEffects {
     loadUsers$;
     addUser$;
-    addSuccessUser$
+    addSuccessUser$;
+    updateUser$;
+    updateSuccessUser$;
 
     constructor(
         private router: Router,
@@ -48,6 +50,19 @@ export class UsersEffects {
                 ))
             )
         )
+
+        this.updateUser$ = createEffect(
+            () => this.actions$.pipe(
+                ofType(update),
+                exhaustMap((action) => this.service.update(action.userUpdated)
+                .pipe(
+                    map(userUpdated => {
+                        return updateSuccess({userUpdated})
+                    }),
+                    catchError( error => (error.status == 400) ? of(setErrors({ errors: error.error })) : EMPTY)
+                ))
+            )
+        )
         
         this.addSuccessUser$ = createEffect(
             () => this.actions$.pipe(
@@ -58,6 +73,21 @@ export class UsersEffects {
                     Swal.fire({
                         title: "New user created!",
                         text: "User saved successfully!",
+                        icon: "success"
+                    });
+                })
+            ), {dispatch: false}
+        )
+
+        this.updateSuccessUser$ = createEffect(
+            () => this.actions$.pipe(
+                ofType(updateSuccess),
+                tap(() => {
+                    this.router.navigate(['/users']);
+                    
+                    Swal.fire({
+                        title: "User updated!",
+                        text: "User edited successfully!",
                         icon: "success"
                     });
                 })
