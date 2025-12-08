@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { User } from "../models/user";
-import { addSuccess, find, findAll, findAllPageable, load, remove, resetUser, setErrors, setPaginator, update, updateSuccess } from "./users.actions";
+import { addSuccess, find, findAll, findAllPageable, load, remove, resetUser, setErrors, setPaginator, setUserForm, update, updateSuccess } from "./users.actions";
 
 const users: User[] = [];
 const user: User = new User();
@@ -14,6 +14,12 @@ export const usersReducer = createReducer(
     //So far, when we switch from "update user" to "create user", the form fields were filled in with the
     //data from the update that we previously were in. This function resets the fields when we enter "create user".
     on(resetUser, (state) => ({
+        users: state.users,
+        paginator: state.paginator,
+        user: {... user},
+        errors: state.errors
+    })),
+    on(setUserForm, (state, { user }) => ({
         users: state.users,
         paginator: state.paginator,
         user: {... user},
