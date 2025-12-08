@@ -55,12 +55,11 @@ export class FormUserComponent implements OnInit{
     } else {
       this.store.dispatch(add({ userNew: this.user }))
     }
-    this.store.dispatch(resetUser());
+    //By deleting this line, whenever some fields are valid and others not instead of clearing the entire form, the correct 
+    // fields that were submitted previously are populated once again.
   }
 
   onClear(userForm: NgForm): void {
-    //Whenever a clear form command is issued, instead of clearing the entire form, the correct fields that were
-    //submitted previously are populated once again.
     this.store.dispatch(resetUser());
     userForm.reset();
     userForm.resetForm();
