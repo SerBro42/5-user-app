@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../services/user';
 import Swal from 'sweetalert2';
 import { Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar';
 import { SharingDataService } from '../services/sharing-data';
 import { AuthService } from '../services/auth';
-import { Store } from '@ngrx/store';
-import { remove } from '../store/users.actions';
 
 @Component({
   selector: 'user-app',
@@ -18,15 +15,12 @@ export class UserAppComponent implements OnInit {
 
   //We need to add this to the constructor for the edit function
   constructor(
-    private store: Store<{users: any}>,
     private router: Router,
-    private service: UserService,
     private sharingData: SharingDataService,
     private authService: AuthService) {
   }
 
   ngOnInit(): void {
-    this.removeUser();
     this.handlerLogin();
   }
 
@@ -78,17 +72,6 @@ export class UserAppComponent implements OnInit {
   //We delete addUser() completely
 
   //We add the router.navigate(...) line to refresh automatically the page after user deletion.
-  removeUser(): void {
-    this.sharingData.idUserEventEmitter.subscribe(id => {
-      //Coerce incoming id to a primitive number before passing to the service/remove and comparisons.
-      const idNum: number = Number(id);
-      this.service.remove(idNum).subscribe(() => {
-        this.store.dispatch(remove({ id }));
-        this.router.navigate(['/users/create'], { skipLocationChange: true }).then(() => {
-          this.router.navigate(['/users']);
-        });
-      })
-    })
-  }
+  //Deleted function to remove User
 
 }

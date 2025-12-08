@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { UserService } from "../services/user";
 import { catchError, EMPTY, exhaustMap, map, of, tap } from "rxjs";
-import { add, addSuccess, findAll, findAllPageable, load, setErrors, setPaginator, update, updateSuccess } from "./users.actions";
+import { add, addSuccess, findAll, findAllPageable, load, remove, removeSuccess, setErrors, setPaginator, update, updateSuccess } from "./users.actions";
 import { User } from "../models/user";
 import Swal from "sweetalert2";
 import { Router } from "@angular/router";
@@ -16,6 +16,8 @@ export class UsersEffects {
     addSuccessUser$;
     updateUser$;
     updateSuccessUser$;
+    removeUser$;
+    removeSuccessUser$;
 
     constructor(
         private router: Router,
@@ -63,6 +65,19 @@ export class UsersEffects {
                 ))
             )
         )
+
+        this.removeUser$ = createEffect(
+            () => this.actions$.pipe(
+                ofType(remove),
+                exhaustMap((action) => this.service.remove(action.id)
+                .pipe(
+                    map(id => {
+                        return removeSuccess({id})
+                    }),
+                    catchError( error => (error.status == 400) ? of(setErrors({ errors: error.error })) : EMPTY)
+                ))
+            )
+        )
         
         this.addSuccessUser$ = createEffect(
             () => this.actions$.pipe(
@@ -88,6 +103,21 @@ export class UsersEffects {
                     Swal.fire({
                         title: "User updated!",
                         text: "User edited successfully!",
+                        icon: "success"
+                    });
+                })
+            ), {dispatch: false}
+        )
+
+        this.removeSuccessUser$ = createEffect(
+            () => this.actions$.pipe(
+                ofType(removeSuccess),
+                tap(() => {
+                    this.router.navigate(['/users']);
+                    
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "User deleted from database",
                         icon: "success"
                     });
                 })

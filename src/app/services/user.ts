@@ -41,7 +41,8 @@ export class UserService {
     return this.http.put<User>(`${this.url}/${user.id}`, user);
   }
 
-  remove(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.url}/${id}`);
+  //We changed parameter type from 'void' to 'number' so that we have at least some data that we can pass to the backand.
+  remove(id: number): Observable<number> {
+    return this.http.delete<number>(`${this.url}/${id}`);
   }
 }

@@ -7,7 +7,7 @@ import { SharingDataService } from '../../services/sharing-data';
 import { PaginatorComponent } from '../paginator/paginator';
 import { AuthService } from '../../services/auth';
 import { Store } from '@ngrx/store';
-import { load } from '../../store/users.actions';
+import { load, remove } from '../../store/users.actions';
 
 @Component({
   selector: 'user',
@@ -43,8 +43,8 @@ export class UserComponent implements OnInit{
   }
 
   onRemoveUser(id: number): void {
-
-    Swal.fire({
+    //this.sharingData.idUserEventEmitter.emit(id);
+      Swal.fire({
       title: "Confirm delete user",
       text: "Are you sure you wish to delete this user?",
       icon: "warning",
@@ -54,12 +54,7 @@ export class UserComponent implements OnInit{
       confirmButtonText: "Confirm"
     }).then((result) => {
       if (result.isConfirmed) {
-        this.sharingData.idUserEventEmitter.emit(id);
-        Swal.fire({
-          title: "Deleted!",
-          text: "User deleted from database",
-          icon: "success"
-        });
+        this.store.dispatch(remove({ id }));
       }
     });
   }
