@@ -4,7 +4,7 @@ import { User } from '../../models/user';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { add, find, resetUser, setUserForm, update } from '../../store/users.actions';
+import { add, find, resetUser, update } from '../../store/users.actions';
 
 @Component({
   selector: 'form-user',
@@ -32,8 +32,8 @@ export class FormUserComponent implements OnInit{
   //There are two alternatives for obtaining the user info by ID: the first (the one that we originally implemented) involves
   //calling the Angular State. The second involves calling the back-end. We have opted to stay on our original paradigm for now.
   ngOnInit(): void {
-    //Each time we reset the form, it is populated by the data (partial data) that we introduced previously.
     this.store.dispatch(resetUser());
+
     this.route.paramMap.subscribe(params => {
       //our local constant variable 'id' is number type, but the 'id' that is being passed is string. So, by means of
       //'+', we convert the string into a number. That in and of itself is not enough, the parameter might be null value.
@@ -47,8 +47,6 @@ export class FormUserComponent implements OnInit{
   }
 
   onSubmit(userForm: NgForm): void {
-
-    this.store.dispatch(setUserForm({ user: this.user }));
 
     if (this.user.id > 0) {      
       this.store.dispatch(update({ userUpdated: this.user }))

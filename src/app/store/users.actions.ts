@@ -4,8 +4,6 @@ import { User } from "../models/user";
 export const load = createAction('load', props<{ page: number }>());
 
 export const resetUser = createAction('resetUser');
-//We create this action in order not to lose the data of the form when we attempt to validate an incomplete form.
-export const setUserForm = createAction('setUserForm', props<{ user: User }>());
 export const findAll = createAction('findAll', props<{ users: User[] }>());
 //It is better to extend an existing functionality than to change it.
 export const findAllPageable = createAction('findAllPageable', props<{ users: User[], paginator: any }>());
@@ -19,4 +17,4 @@ export const updateSuccess = createAction('updateSuccess', props<{ userUpdated: 
 export const remove = createAction('remove', props<{ id: number }>());
 export const removeSuccess = createAction('removeSuccess', props<{ id: number }>());
 
-export const setErrors = createAction('setErrors', props<{ errors: any }>());
+export const setErrors = createAction('setErrors', props<{ userForm: User, errors: any }>());

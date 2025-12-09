@@ -48,7 +48,7 @@ export class UsersEffects {
                     map(userNew => {
                         return addSuccess({userNew})
                     }),
-                    catchError( error => (error.status == 400) ? of(setErrors({ errors: error.error })) : EMPTY)
+                    catchError( error => (error.status == 400) ? of(setErrors({ userForm: action.userNew, errors: error.error })) : of(error))
                 ))
             )
         )
@@ -61,7 +61,7 @@ export class UsersEffects {
                     map(userUpdated => {
                         return updateSuccess({userUpdated})
                     }),
-                    catchError( error => (error.status == 400) ? of(setErrors({ errors: error.error })) : EMPTY)
+                    catchError( error => (error.status == 400) ? of(setErrors({ userForm: action.userUpdated, errors: error.error })) : of(error))
                 ))
             )
         )
@@ -71,10 +71,9 @@ export class UsersEffects {
                 ofType(remove),
                 exhaustMap((action) => this.service.remove(action.id)
                 .pipe(
-                    map(id => {
-                        return removeSuccess({id})
+                    map(() => {
+                        return removeSuccess({id: action.id})
                     }),
-                    catchError( error => (error.status == 400) ? of(setErrors({ errors: error.error })) : EMPTY)
                 ))
             )
         )
