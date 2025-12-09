@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -43,6 +43,8 @@ export class UserService {
 
   //We changed parameter type from 'void' to 'number' so that we have at least some data that we can pass to the backand.
   remove(id: number): Observable<number> {
-    return this.http.delete<number>(`${this.url}/${id}`);
+    return this.http.delete<number>(`${this.url}/${id}`).pipe(
+      map(() => id)
+    );
   }
 }
