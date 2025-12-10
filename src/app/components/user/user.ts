@@ -7,7 +7,7 @@ import { SharingDataService } from '../../services/sharing-data';
 import { PaginatorComponent } from '../paginator/paginator';
 import { AuthService } from '../../services/auth';
 import { Store } from '@ngrx/store';
-import { load, remove } from '../../store/users.actions';
+import { load, remove } from '../../store/users/users.actions';
 
 @Component({
   selector: 'user',

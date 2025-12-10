@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { UserService } from "../services/user";
+import { UserService } from "../../services/user";
 import { catchError, EMPTY, exhaustMap, map, of, tap } from "rxjs";
 import { add, addSuccess, findAll, findAllPageable, load, remove, removeSuccess, setErrors, setPaginator, update, updateSuccess } from "./users.actions";
-import { User } from "../models/user";
+import { User } from "../../models/user";
 import Swal from "sweetalert2";
 import { Router } from "@angular/router";
 
