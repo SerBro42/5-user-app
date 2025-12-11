@@ -7,8 +7,13 @@ export const initialLogin = {
     user: undefined
 }
 
+//If we refresh the browser page, our login data will be reset to default values (see const initialLogin). In order
+// to avoid that, we declare this variable by which the login data is extracted from sessionStorage. If there isn't any,
+// the state is set to default values.
+const initialState = JSON.parse(sessionStorage.getItem('login') || JSON.stringify(initialLogin));
+
 export const authReducer = createReducer(
-    initialLogin,
+    initialState,
     on(login, (state, { login })  => (
         {
             isAuth: true,
