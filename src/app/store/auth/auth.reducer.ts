@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store"
-import { login, logout } from "./auth.actions"
+import { loginSuccess, logout } from "./auth.actions"
 
 export const initialLogin = {
     isAuth: false,
@@ -14,7 +14,7 @@ const initialState = JSON.parse(sessionStorage.getItem('login') || JSON.stringif
 
 export const authReducer = createReducer(
     initialState,
-    on(login, (state, { login })  => (
+    on(loginSuccess, (state, { login })  => (
         {
             isAuth: true,
             isAdmin: login.isAdmin,

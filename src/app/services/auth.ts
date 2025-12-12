@@ -29,7 +29,6 @@ export class AuthService {
 
   //'login' comes from UserAppComponent
   set user(user: any) {
-    this.store.dispatch(login({ login: user }));
     sessionStorage.setItem('login', JSON.stringify(user));
   }
 
@@ -48,7 +47,7 @@ export class AuthService {
     return sessionStorage.getItem('token')!;
   }
 
-  getPayLoad(token: string) {
+  getPayload(token: string) {
     if (token != null) {
       //This line comes from UserAppComponent. It is more appropriate to put it here.
       return JSON.parse(atob(token.split(".")[1]));
