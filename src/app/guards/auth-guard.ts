@@ -27,7 +27,7 @@ export const authGuard: CanActivateFn = (route, state) => {
 const isTokenExpired = () => {
   const service = inject(AuthService);
   const token = service.token;
-  const payload = service.getPayLoad(token);
+  const payload = service.getPayload(token);
   //returns in seconds
   const exp = payload.exp;
   //returns in milliseconds
