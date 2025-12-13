@@ -1,12 +1,13 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { AuthService } from "../../services/auth";
 import { Router } from "@angular/router";
-import { login, loginSuccess } from "./auth.actions";
-import { exhaustMap, map } from "rxjs";
+import { login, loginError, loginSuccess } from "./auth.actions";
+import { catchError, exhaustMap, map, of, tap } from "rxjs";
+import Swal from "sweetalert2";
 
 export class AuthEffects {
 
-    login$ = createEffect(() => this.action$.pipe(
+    login$ = createEffect(() => this.actions$.pipe(
         ofType(login),
         exhaustMap( action => this.service.loginUser({username: action.username, password: action.password })
         .pipe(
@@ -22,13 +23,28 @@ export class AuthEffects {
                 this.service.token = token;
                 this.service.user = loginData;
                 return loginSuccess({ login: loginData });
-            })
+            }),
+            catchError((error) => of(loginError({ error: error.error.message })))
         ))
     ));
 
+    loginSuccess$ = createEffect(() => this.actions$.pipe(
+        ofType(loginSuccess),
+        tap(() => {
+            this.router.navigate(['/users']);
+        })
+    ), {dispatch: false})
+
+    loginError$ = createEffect(() => this.actions$.pipe(
+        ofType(loginError),
+        tap((action) => {
+            Swal.fire('Login error', action.error , 'error')
+        })
+    ), {dispatch: false})
+
     constructor(
         private service: AuthService,
-        private action$: Actions,
+        private actions$: Actions,
         private router: Router
     ){}
 }
